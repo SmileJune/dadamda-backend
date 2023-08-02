@@ -6,6 +6,8 @@ import com.forever.dadamda.entity.scrap.Video;
 import com.forever.dadamda.entity.user.User;
 import com.forever.dadamda.exception.NotFoundException;
 import com.forever.dadamda.repository.VideoRepository;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class VideoService {
     public Video saveVideo(JSONObject crawlingResponse, User user, String pageUrl) {
         Long watchedCnt = null;
         Long playTime = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         if (crawlingResponse.get("watched_cnt") != null) {
             watchedCnt = Long.parseLong(crawlingResponse.get("watched_cnt").toString());
@@ -36,10 +39,10 @@ public class VideoService {
                 .embedUrl(crawlingResponse.get("embed_url").toString())
                 .channelName(crawlingResponse.get("channel_name").toString())
                 //.channelImageUrl(crawlingVideoResponse.get("channel_image_url").toString())
-                .watchedCnt(watchedCnt).playTime(playTime)
-                //.publishedDate(LocalDateTime.parse(crawlingVideoResponse.get("published_date").toString(), formatter))
-                .siteName(crawlingResponse.get("site_name").toString())
-                .genre(crawlingResponse.get("genre").toString()).build();
+                .watchedCnt(watchedCnt)
+                .playTime(playTime)
+                .publishedDate(LocalDateTime.parse(crawlingResponse.get("published_date").toString(), formatter))
+                .siteName(crawlingResponse.get("site_name").toString()).build();
 
         return videoRepository.save(video);
     }
