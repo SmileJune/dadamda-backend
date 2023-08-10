@@ -16,6 +16,7 @@ import com.forever.dadamda.dto.scrap.GetVideoCountResponse;
 import com.forever.dadamda.dto.scrap.GetVideoResponse;
 import com.forever.dadamda.dto.scrap.UpdateScrapRequest;
 import com.forever.dadamda.entity.scrap.Scrap;
+import com.forever.dadamda.exception.InvalidException;
 import com.forever.dadamda.service.MemoService;
 import com.forever.dadamda.service.scrap.ArticleService;
 import com.forever.dadamda.service.scrap.OtherService;
@@ -60,6 +61,8 @@ public class ScrapController {
             CreateScrapResponse createScrapResponse = scrapService.createScraps(email,
                     createScrapRequest.getPageUrl());
             return ApiResponse.success(createScrapResponse);
+        } catch (InvalidException e) {
+            return ApiResponse.error(ErrorCode.INVALID_DUPLICATED_SCRAP);
         } catch (ParseException | RuntimeException e) {
             return ApiResponse.error(ErrorCode.INVALID_SCRAP_URL);
         }
