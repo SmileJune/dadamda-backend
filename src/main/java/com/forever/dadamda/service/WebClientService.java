@@ -28,6 +28,10 @@ public class WebClientService {
                 .bodyToMono(Map.class)
                 .block();
 
+        if (response == null || response.get("body") == null) {
+            throw new RuntimeException("Invalid response");
+        }
+
         JSONParser jsonParser = new JSONParser();
 
         Object obj = jsonParser.parse(response.get("body").toString());

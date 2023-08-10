@@ -35,7 +35,7 @@ public class ScrapService {
     private final UserService userService;
 
     @Transactional
-    public CreateScrapResponse createScraps(String email, String pageUrl) throws ParseException {
+    public CreateScrapResponse createScraps(String email, String pageUrl) throws RuntimeException, ParseException {
         User user = userService.validateUser(email);
 
         //1. 해당 링크 중복 확인 (삭제된 링크면 중복 X)
@@ -51,7 +51,7 @@ public class ScrapService {
     }
 
     @Transactional
-    public Scrap saveScraps(User user, String pageUrl) throws ParseException {
+    public Scrap saveScraps(User user, String pageUrl) throws RuntimeException, ParseException {
         //2. 람다에게 api 요청
         JSONObject crawlingResponse = webClientService.crawlingItem(pageUrl);
 

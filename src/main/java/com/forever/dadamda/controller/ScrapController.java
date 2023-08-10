@@ -1,6 +1,7 @@
 package com.forever.dadamda.controller;
 
 import com.forever.dadamda.dto.ApiResponse;
+import com.forever.dadamda.dto.ErrorCode;
 import com.forever.dadamda.dto.scrap.CreateScrapRequest;
 import com.forever.dadamda.dto.scrap.CreateScrapResponse;
 import com.forever.dadamda.dto.scrap.GetArticleCountResponse;
@@ -22,13 +23,19 @@ import com.forever.dadamda.service.scrap.ProductService;
 import com.forever.dadamda.service.scrap.ScrapService;
 import com.forever.dadamda.service.scrap.VideoService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.data.domain.Pageable;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.parser.ParseException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
@@ -45,13 +52,17 @@ public class ScrapController {
     @PostMapping("/v1/scraps")
     public ApiResponse<CreateScrapResponse> addScraps(
             @Valid @RequestBody CreateScrapRequest createScrapRequest,
-            Authentication authentication) throws ParseException {
+            Authentication authentication) {
 
         String email = authentication.getName();
 
-        CreateScrapResponse createScrapResponse = scrapService.createScraps(email,
-                createScrapRequest.getPageUrl());
-        return ApiResponse.success(createScrapResponse);
+        try {
+            CreateScrapResponse createScrapResponse = scrapService.createScraps(email,
+                    createScrapRequest.getPageUrl());
+            return ApiResponse.success(createScrapResponse);
+        } catch (ParseException | RuntimeException e) {
+            return ApiResponse.error(ErrorCode.INVALID_SCRAP_URL);
+        }
     }
 
     @Operation(summary = "스크랩 삭제", description = "한개의 스크랩을 삭제할 수 있습니다.")
@@ -118,8 +129,7 @@ public class ScrapController {
 
     @Operation(summary = "전체 스크랩 수정", description = "스크랩을 수정할 수 있습니다.")
     @PatchMapping("/v1/scraps")
-    public ApiResponse<String> updateScraps(
-            @RequestBody UpdateScrapRequest updateScrapRequest,
+    public ApiResponse<String> updateScraps(@RequestBody UpdateScrapRequest updateScrapRequest,
             Authentication authentication) {
 
         String email = authentication.getName();
