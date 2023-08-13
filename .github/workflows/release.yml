@@ -55,6 +55,7 @@ jobs:
           aws ecs describe-task-definition \
           --task-definition dadamda-api-family \
           --query taskDefinition > task-definition.json
+          cat task-definition.json
           
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -71,46 +72,3 @@ jobs:
           service: dadamda-api-service
           cluster: dadamda-api-cluster
           wait-for-service-stability: true
-
-#      # 디렉토리 생성
-#      - name: Make Directory
-#        run: mkdir -p deploy
-#
-#      # Jar 파일 복사
-#      - name: Copy Jar
-#        run: cp ./build/libs/*.jar ./deploy
-#
-#      # appspec.yml 파일 복사
-#      - name: Copy appspec.yml
-#        run: cp appspec.yml ./deploy
-#
-#      # script files 복사
-#      - name: Copy script
-#        run: cp ./scripts/*.sh ./deploy
-#
-#      - name: Make zip file
-#        run: zip -r ./dadamda-api.zip ./deploy
-#        shell: bash
-#
-#      - name: Configure AWS credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: ap-northeast-2
-#
-#      - name: Upload to S3
-#        run: aws s3 cp --region ap-northeast-2 ./dadamda-api.zip s3://$S3_BUCKET_NAME/
-#
-#      # Deploy
-#      - name: Deploy
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        run: |
-#          aws deploy create-deployment \
-#          --application-name dadamda \
-#          --deployment-group-name dadamda-group \
-#          --file-exists-behavior OVERWRITE \
-#          --s3-location bucket=dadamda-deploy,bundleType=zip,key=dadamda-api.zip \
-#          --region ap-northeast-2
