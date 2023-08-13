@@ -16,16 +16,19 @@ jobs:
         with:
           java-version: '11'
           distribution: 'corretto'
-#
-#      - name: properties 파일 복사
-#        run: |
-#          echo "${{ secrets.APPLICATION_DEV_SECRET_YML }}" | base64 --decode > src/main/resources/application-dev-secret.yml
-#
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-#
-#      - name: Build with Gradle
-#        run: ./gradlew clean build
+
+      - name: properties 파일 복사
+        run: |
+          echo "${{ secrets.APPLICATION_DEV_SECRET_YML }}" | base64 --decode > src/main/resources/application-dev-secret.yml
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean build
+          ls -al
+
 #
 #      # 디렉토리 생성
 #      - name: Make Directory
