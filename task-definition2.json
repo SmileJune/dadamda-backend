@@ -1,0 +1,32 @@
+{
+  "containerDefinitions": [
+    {
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fargate-task",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 8080
+        }
+      ],
+      "cpu": 0,
+      "memory": 500,
+      "name": "learn"
+    }
+  ],
+  "placementConstraints": [],
+  "memory": "500",
+  "family": "ec2-task",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "bridge",
+  "cpu": "450"
+}
