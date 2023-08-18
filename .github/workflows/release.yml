@@ -2,7 +2,7 @@ name: API Server Release
 
 on:
   push:
-    branches: [ feature/* ]
+    branches: [ main ]
 
 jobs:
   build:
